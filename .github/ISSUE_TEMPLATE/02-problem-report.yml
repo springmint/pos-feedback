@@ -1,0 +1,46 @@
+name: 问题反馈
+description: 反馈功能异常、错误提示或业务流程中断
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请先[搜索已有反馈](https://github.com/springmint/pos-feedback/issues?q=is%3Aissue)。Issue 公开可见，请对截图、日志和示例数据先做脱敏。
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际发生了什么
+      description: 写出异常现象、错误提示，以及它是否影响正常营业。
+      placeholder: 例如，点击打印小票后提示打印失败，订单显示已支付。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 操作步骤与发生频率
+      description: 按顺序列出操作和必要的前置条件。如果是偶发问题，描述出问题前的操作与大致频率。
+      placeholder: |
+        1. 打开已支付订单。
+        2. 点击「打印小票」。
+        3. 约每 5 次操作发生 1 次。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期结果
+      description: 写出正常情况下应该发生什么。
+      placeholder: 例如，打印机出纸，页面显示打印成功。
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 使用环境
+      description: 如知道，请填写产品端、版本、设备型号或浏览器。
+      placeholder: 例如，Android POS 2.5.1，某型号收银终端。
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 补充资料
+      description: 可以附上脱敏截图、日志片段、发生时间和时区，或描述可用的临时处理方法。
