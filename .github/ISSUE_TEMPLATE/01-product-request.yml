@@ -6,19 +6,6 @@ body:
     attributes:
       value: |
         请先[搜索已有反馈](https://github.com/springmint/pos-feedback/issues?q=is%3Aissue)。Issue 公开可见，请对截图和示例数据先做脱敏。
-  - type: textarea
-    id: request
-    attributes:
-      label: 需求描述
-      description: 说明使用场景、遇到的困难，以及希望新增或改进的功能。
-      placeholder: 例如，店长交班时要逐笔核对收款，希望交班报表能按支付方式汇总实收金额。
-    validations:
-      required: true
-  - type: textarea
-    id: references
-    attributes:
-      label: 补充资料
-      description: 可以附上脱敏截图、流程示意或相关 Issue 链接。
   - type: dropdown
     id: expected-completion
     attributes:
@@ -32,3 +19,16 @@ body:
       default: 0
     validations:
       required: true
+  - type: textarea
+    id: request
+    attributes:
+      label: 需求描述
+      description: 说明使用场景、遇到的困难，以及希望新增或改进的功能。
+      placeholder: 例如，店长交班时要逐笔核对收款，希望交班报表能按支付方式汇总实收金额。
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: 补充资料
+      description: 可以附上脱敏截图、流程示意或相关 Issue 链接。

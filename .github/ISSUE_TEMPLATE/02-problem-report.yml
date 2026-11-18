@@ -6,6 +6,19 @@ body:
     attributes:
       value: |
         请先[搜索已有反馈](https://github.com/springmint/pos-feedback/issues?q=is%3Aissue)。Issue 公开可见，请对截图、日志和示例数据先做脱敏。
+  - type: dropdown
+    id: expected-completion
+    attributes:
+      label: 期望完成时间
+      options:
+        - 不限时间
+        - 1 周内
+        - 2 周内
+        - 1 个月内
+        - 3 个月内
+      default: 0
+    validations:
+      required: true
   - type: textarea
     id: steps
     attributes:
@@ -39,16 +52,3 @@ body:
     attributes:
       label: 补充资料
       description: 可以补充版本、设备型号、发生时间，或附上脱敏截图和日志片段。
-  - type: dropdown
-    id: expected-completion
-    attributes:
-      label: 期望完成时间
-      options:
-        - 不限时间
-        - 1 周内
-        - 2 周内
-        - 1 个月内
-        - 3 个月内
-      default: 0
-    validations:
-      required: true
