@@ -7,29 +7,28 @@ body:
       value: |
         请先[搜索已有反馈](https://github.com/springmint/pos-feedback/issues?q=is%3Aissue)。Issue 公开可见，请对截图和示例数据先做脱敏。
   - type: textarea
-    id: scenario
+    id: request
     attributes:
-      label: 使用场景与困难
-      description: 谁在什么业务场景下遇到了什么困难？现在是怎么处理的？
-      placeholder: 例如，店长交班时需要核对各支付方式的金额，目前要逐笔统计。
+      label: 需求描述
+      description: 说明使用场景、遇到的困难，以及希望新增或改进的功能。
+      placeholder: 例如，店长交班时要逐笔核对收款，希望交班报表能按支付方式汇总实收金额。
     validations:
       required: true
-  - type: textarea
-    id: outcome
-    attributes:
-      label: 希望达到的结果
-      description: 描述完成后希望用户能做什么。有具体方案也可以一并说明。
-      placeholder: 例如，在交班报表上直接看到各支付方式的实收金额。
-    validations:
-      required: true
-  - type: textarea
-    id: impact
-    attributes:
-      label: 影响范围与频率
-      description: 可以补充涉及的岗位、门店类型、遇到的频率或额外工作量。
-      placeholder: 例如，每次交班都需要手工统计，通常多花 10 分钟。
   - type: textarea
     id: references
     attributes:
       label: 补充资料
       description: 可以附上脱敏截图、流程示意或相关 Issue 链接。
+  - type: dropdown
+    id: expected-completion
+    attributes:
+      label: 期望完成时间
+      options:
+        - 不限时间
+        - 1 周内
+        - 2 周内
+        - 1 个月内
+        - 3 个月内
+      default: 0
+    validations:
+      required: true
