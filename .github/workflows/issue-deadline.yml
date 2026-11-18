@@ -3,13 +3,20 @@ name: 填写 Issue 期望完成日期
 on:
   issues:
     types: [opened]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 要补写截止日期的 Issue 编号
+        required: true
+        type: number
 
 permissions:
   issues: write
 
 jobs:
   set-deadline:
-    if: startsWith(github.event.issue.body, '### 期望完成时间')
+    concurrency:
+      group: issue-deadline-${{ github.event.issue.number || inputs.issue_number }}
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -17,21 +24,38 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
-            const { data: issue } = await github.rest.issues.get(context.issue)
-            const match = issue.body?.match(/^(### 期望完成时间\r?\n\r?\n)([^\r\n]+)/u)
+            const issueNumber = Number(context.payload.issue?.number ?? context.payload.inputs?.issue_number)
+            if (!Number.isSafeInteger(issueNumber) || issueNumber < 1) {
+              throw new Error('缺少有效的 Issue 编号。')
+            }
+
+            const issueParams = {
+              ...context.repo,
+              issue_number: issueNumber,
+              headers: { accept: 'application/vnd.github.raw+json' },
+            }
+            const { data: issue } = await github.rest.issues.get(issueParams)
+            if (issue.pull_request) {
+              core.info(`#${issueNumber} 是 Pull Request，跳过。`)
+              return
+            }
+
+            const match = issue.body?.match(/^(\s*### [ \t]*期望完成时间[ \t]*\r?\n(?:[ \t]*\r?\n)+)([^\r\n]+)/u)
             if (!match) {
+              core.info(`#${issueNumber} 的正文开头没有期望完成时间字段。`)
               return
             }
 
             const offsets = new Map([
-              ['1 周内', { days: 7 }],
-              ['2 周内', { days: 14 }],
-              ['1 个月内', { months: 1 }],
-              ['3 个月内', { months: 3 }],
+              ['1周内', { days: 7 }],
+              ['2周内', { days: 14 }],
+              ['1个月内', { months: 1 }],
+              ['3个月内', { months: 3 }],
             ])
-            const choice = match[2]
-            const offset = offsets.get(choice)
+            const choice = match[2].trim()
+            const offset = offsets.get(choice.normalize('NFKC').replace(/\s+/gu, ''))
             if (!offset) {
+              core.info(`#${issueNumber} 没有待换算的期限。`)
               return
             }
 
@@ -52,4 +76,8 @@ jobs:
             const deadline = new Date(Date.UTC(year, targetMonth, targetDay)).toISOString().slice(0, 10)
 
             const body = `${match[1]}${deadline}（${choice}）${issue.body.slice(match[0].length)}`
-            await github.rest.issues.update({ ...context.issue, body })
+            const { data: updatedIssue } = await github.rest.issues.update({ ...issueParams, body })
+            if (updatedIssue.body !== body) {
+              throw new Error(`#${issueNumber} 的正文未按预期更新。`)
+            }
+            core.info(`#${issueNumber} 已写入期望完成日期 ${deadline}。`)
